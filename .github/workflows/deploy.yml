@@ -1,0 +1,60 @@
+name: Desplegar a Cloudflare Pages
+
+# Cada push a main reconstruye el sitio y lo publica en otraconversacion.com.
+# El proyecto de Pages es de subida directa, asi que el despliegue lo hace
+# wrangler desde aqui en lugar de la integracion nativa con Git.
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - '**/*.md'
+      - '.gitignore'
+  workflow_dispatch:
+
+# Un despliegue a la vez: si llegan dos push seguidos, gana el ultimo.
+concurrency:
+  group: pages-produccion
+  cancel-in-progress: true
+
+jobs:
+  desplegar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+
+    steps:
+      - name: Descargar el repositorio
+        uses: actions/checkout@v4
+
+      - name: Preparar Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Construir el sitio
+        run: npm run build
+
+      - name: Comprobar que la salida es correcta
+        run: |
+          test -f dist/index.html
+          test -f dist/sitemap.xml
+          test -f dist/feed/podcast.xml
+          paginas=$(grep -c '<loc>' dist/sitemap.xml)
+          echo "Paginas en el sitemap: $paginas"
+          if [ "$paginas" -lt 80 ]; then
+            echo "El sitemap trae menos paginas de las esperadas. No se despliega."
+            exit 1
+          fi
+
+      - name: Publicar en Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist --project-name=otraconversacion --branch=main --commit-dirty=true
