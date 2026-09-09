@@ -1,5 +1,8 @@
 /* Genera las imagenes del sitio: AVIF + WebP + JPEG responsive, iconos y tarjetas OG.
-   Fuente: media/raw (extraidas del HTML original) y media/yt (miniaturas del canal).
+   Fuentes:
+     media/raw   fotografia propia extraida del documento original
+     media/yt    miniaturas del canal de YouTube
+     media/stock fotografia libre de Unsplash para las cabeceras del blog
    Salida: dist/img  */
 
 import sharp from 'sharp';
@@ -22,27 +25,33 @@ export const PHOTOS = {
   'fuera-estudio': 'raw/44d82b02f7.jpg'    // 760x507
 };
 
-/* Imagenes de cabecera de los articulos: fotografia propia, sin bancos de imagenes. */
+/* Cabecera de cada articulo. Una foto distinta por articulo, de Unsplash.
+   Los creditos y los enlaces originales estan en media/stock/CREDITS.md */
 export const POST_IMAGES = {
-  'blog-patrocinio': 'estudio',
-  'blog-economia':   'congreso',
-  'blog-backstage':  'fuera-estudio',
-  'blog-preparar':   'destacado',
-  'blog-preguntas':  'estudio',
-  'blog-sostener':   'congreso',
-  'blog-invitados':  'playlist'
+  'blog-patrocinio': 'stock/blog-patrocinio.jpg',
+  'blog-economia':   'stock/blog-economia.jpg',
+  'blog-backstage':  'stock/blog-backstage.jpg',
+  'blog-preparar':   'stock/blog-preparar.jpg',
+  'blog-preguntas':  'stock/blog-preguntas.jpg',
+  'blog-sostener':   'stock/blog-sostener.jpg',
+  'blog-invitados':  'stock/blog-invitados.jpg'
 };
 
 const WIDTHS_WIDE = [480, 768, 1200];
 const WIDTHS_PORTRAIT = [320, 480, 640];
 const Q = { avif: 52, webp: 74, jpeg: 78 };
 
-async function variants(input, name, widths, ratio) {
+/* Las fotos de archivo llegan muy saturadas para una interfaz oscura.
+   Bajarles el color y el brillo las hace convivir con la fotografia propia. */
+const CALM = { saturation: 0.72, brightness: 0.94 };
+
+async function variants(input, name, widths, ratio, { calm = false } = {}) {
   const [rw, rh] = ratio.split('/').map(Number);
   const jobs = [];
   for (const w of widths) {
     const h = Math.round((w * rh) / rw);
-    const base = sharp(input).resize(w, h, { fit: 'cover', position: 'attention' });
+    let base = sharp(input).resize(w, h, { fit: 'cover', position: 'attention' });
+    if (calm) base = base.modulate(CALM);
     jobs.push(base.clone().avif({ quality: Q.avif, effort: 5 }).toFile(path.join(OUT, `${name}-${w}.avif`)));
     jobs.push(base.clone().webp({ quality: Q.webp }).toFile(path.join(OUT, `${name}-${w}.webp`)));
     jobs.push(base.clone().jpeg({ quality: Q.jpeg, mozjpeg: true }).toFile(path.join(OUT, `${name}-${w}.jpg`)));
@@ -77,9 +86,9 @@ export default async function buildImages(episodes) {
 
   /* Fotografia general */
   for (const [name, rel] of Object.entries(PHOTOS)) {
+    if (name === 'logo') continue;
     const src = path.join(ROOT, 'media', rel);
     if (!existsSync(src)) { console.warn('  falta', rel); continue; }
-    if (name === 'logo') continue;
     const portrait = name === 'host';
     await variants(src, name, portrait ? WIDTHS_PORTRAIT : WIDTHS_WIDE, portrait ? '3/4' : '16/9');
   }
@@ -92,13 +101,11 @@ export default async function buildImages(episodes) {
     await ogCard(src, `og-ep-${ep.n}`);
   }
 
-  /* Cabeceras de articulo: alias sobre fotografia propia */
-  for (const [alias, source] of Object.entries(POST_IMAGES)) {
-    const rel = PHOTOS[source];
-    if (!rel) continue;
+  /* Cabeceras de articulo */
+  for (const [alias, rel] of Object.entries(POST_IMAGES)) {
     const src = path.join(ROOT, 'media', rel);
-    if (!existsSync(src)) continue;
-    await variants(src, alias, WIDTHS_WIDE, '16/9');
+    if (!existsSync(src)) { console.warn('  falta foto de articulo', rel); continue; }
+    await variants(src, alias, WIDTHS_WIDE, '16/9', { calm: true });
     await ogCard(src, `og-${alias}`);
   }
 

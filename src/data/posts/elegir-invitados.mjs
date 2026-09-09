@@ -5,6 +5,7 @@ export default {
   tag: { es: 'Guía', en: 'Guide' },
   readMin: 6,
   image: 'blog-invitados',
+  imageAlt: { es: 'Dos personas conversando frente a frente en una mesa junto a una ventana', en: 'Two people talking face to face at a table by a window' },
   title: {
     es: 'Cómo elegimos a los invitados (y cómo proponer uno)',
     en: 'How we choose our guests (and how to propose one)'

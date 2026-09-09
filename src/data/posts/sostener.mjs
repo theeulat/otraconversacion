@@ -5,6 +5,7 @@ export default {
   tag: { es: 'Ideas de la mesa', en: 'Ideas from the table' },
   readMin: 8,
   image: 'blog-sostener',
+  imageAlt: { es: 'Un tendero atiende a un cliente detrás del mostrador de su tienda', en: 'A shopkeeper serving a customer from behind his counter' },
   title: {
     es: 'Sostener es más difícil que empezar: cinco lecciones de 24 conversaciones',
     en: 'Sustaining is harder than starting: five lessons from 24 conversations'

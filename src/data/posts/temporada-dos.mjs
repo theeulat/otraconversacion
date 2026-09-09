@@ -5,6 +5,7 @@ export default {
   tag: { es: 'Detrás de cámaras', en: 'Behind the scenes' },
   readMin: 7,
   image: 'blog-backstage',
+  imageAlt: { es: 'Un equipo de rodaje trabajando alrededor de una cámara en un plató a oscuras', en: 'A film crew working around a camera on a darkened set' },
   title: {
     es: 'Lo que no se ve de la temporada 2',
     en: 'What you do not see from season two'

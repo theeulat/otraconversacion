@@ -5,6 +5,7 @@ export default {
   tag: { es: 'Economía real', en: 'Real economy' },
   readMin: 8,
   image: 'blog-economia',
+  imageAlt: { es: 'Un tendero trabajando dentro de una tienda estrecha llena de tarros de especias', en: 'A shopkeeper at work inside a narrow shop lined with spice jars' },
   title: {
     es: 'Qué es la economía real y por qué casi nadie habla de ella',
     en: 'What the real economy is and why almost nobody talks about it'

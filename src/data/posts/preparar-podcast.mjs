@@ -5,6 +5,7 @@ export default {
   tag: { es: 'Guía', en: 'Guide' },
   readMin: 7,
   image: 'blog-preparar',
+  imageAlt: { es: 'Dos personas grabando un pódcast con auriculares y micrófonos de brazo', en: 'Two people recording a podcast with headphones and boom microphones' },
   title: {
     es: 'Cómo preparar tu primera aparición en un podcast',
     en: 'How to prepare for your first podcast appearance'

@@ -5,6 +5,7 @@ export default {
   tag: { es: 'Marcas', en: 'Brands' },
   readMin: 9,
   image: 'blog-patrocinio',
+  imageAlt: { es: 'Una mesa de mezclas de audio junto a un micrófono de estudio', en: 'An audio mixing desk beside a studio microphone' },
   title: {
     es: 'Patrocinar un podcast: qué funciona, qué no y cuánto cuesta de verdad',
     en: 'Sponsoring a podcast: what works, what does not and what it really costs'

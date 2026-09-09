@@ -7,7 +7,8 @@ export function postCard(p, lang) {
   return `<article class="post rv">
   <a href="${postUrl(p, lang)}">
     <div class="ph r169 has">${picture({
-      name: p.image, alt: '', sizes: '(max-width:700px) 92vw, (max-width:1100px) 45vw, 30vw'
+      name: p.image, alt: p.imageAlt ? p.imageAlt[lang] : '',
+      sizes: '(max-width:700px) 92vw, (max-width:1100px) 45vw, 30vw'
     })}</div>
     <div class="in">
       <span class="tag">${esc(p.tag[lang])}</span>
@@ -111,7 +112,8 @@ export function postPage({ lang, post, posts }) {
   <section>
     <div class="wrap">
       <div class="ph r169 has rv" style="max-width:860px;margin-bottom:calc(var(--lh)*2)">
-        ${picture({ name: post.image, alt: '', sizes: '(max-width:900px) 94vw, 860px', loading: 'eager', fetchpriority: 'high' })}
+        ${picture({ name: post.image, alt: post.imageAlt ? post.imageAlt[lang] : '',
+                    sizes: '(max-width:900px) 94vw, 860px', loading: 'eager', fetchpriority: 'high' })}
       </div>
       <article class="article rv">
         <p class="lede">${esc(post.summary[lang])}</p>

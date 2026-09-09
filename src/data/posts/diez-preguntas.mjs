@@ -5,6 +5,7 @@ export default {
   tag: { es: 'Método', en: 'Method' },
   readMin: 8,
   image: 'blog-preguntas',
+  imageAlt: { es: 'Una pluma estilográfica sobre un cuaderno abierto de hojas rayadas', en: 'A fountain pen resting on an open lined notebook' },
   title: {
     es: 'Las 10 preguntas que abren a cualquiera que ha construido algo',
     en: 'The 10 questions that open up anyone who has built something'
