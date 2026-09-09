@@ -32,12 +32,18 @@ Además: `sitemap.xml`, `robots.txt`, `feed/podcast.xml`, `feed/blog.xml`, `site
 
 ## Comandos
 
+El sitio se publica solo: **cada push a `main` en GitHub reconstruye y despliega**.
+El flujo está en `.github/workflows/deploy.yml` y tarda unos dos minutos y medio.
+
 ```bash
 npm install          # solo la primera vez (sharp, para las imágenes)
 npm run build        # genera dist/ completo, imágenes incluidas
 npm run dev          # servidor local en http://localhost:8788 con las funciones
-npm run deploy       # build + despliegue a producción
+npm run deploy       # despliegue manual, por si hace falta saltarse GitHub
 ```
+
+Los cambios que solo tocan archivos `.md` no disparan despliegue. Para lanzar uno a mano
+sin cambiar nada: pestaña Actions del repositorio, «Desplegar a Cloudflare Pages», Run workflow.
 
 Aviso a buscadores compatibles con IndexNow (Bing, Yandex) después de un cambio grande:
 
@@ -93,8 +99,13 @@ Funciones de Cloudflare Pages en `functions/`:
 | D1 | `otraconversacion` | tabla `messages` |
 | KV | `RATE_LIMIT` | límite de envíos por IP |
 
-Secretos ya configurados: `ADMIN_TOKEN` (guardado en `.admin-token.txt`, no lo subas a ningún
-sitio) y `SALT` (para anonimizar las IP).
+Secretos ya configurados en Pages: `ADMIN_TOKEN` (guardado en `.admin-token.txt`, no lo subas a
+ningún sitio) y `SALT` (para anonimizar las IP).
+
+En GitHub hay otros dos, para que Actions pueda desplegar: `CLOUDFLARE_API_TOKEN`, un token
+acotado a Cloudflare Pages: Edit en esta cuenta, y `CLOUDFLARE_ACCOUNT_ID`. Si alguna vez hay que
+rotar el token, se crea otro en el panel de Cloudflare y se sustituye con
+`gh secret set CLOUDFLARE_API_TOKEN --repo theeulat/otraconversacion`.
 
 ### Leer los mensajes recibidos
 
@@ -145,6 +156,7 @@ src/lib/render.mjs     plantilla base, cabecera, pie, esquemas
 src/pages/             una función por tipo de página
 src/assets/            CSS y JS del sitio
 functions/             backend de Cloudflare Pages
+.github/workflows/     despliegue automatico al hacer push a main
 media/raw, media/yt    fotografía propia y miniaturas del canal
 media/stock            fotos de Unsplash para el blog, con CREDITS.md
 public/                se copia tal cual a dist/ (_headers, _redirects, IndexNow)
