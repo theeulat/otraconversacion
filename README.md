@@ -58,6 +58,9 @@ Todo el texto vive en `src/data/`. No hay que tocar HTML.
   visitas y los párrafos reales de la descripción de YouTube.
 - **`glossary.mjs`** — términos del glosario.
 - **`posts/*.mjs`** — un archivo por artículo del blog; `posts.mjs` es el índice.
+  Cada uno apunta a su foto de cabecera, que vive en `media/stock/`. Para cambiarla basta
+  con sustituir el archivo con el mismo nombre y volver a desplegar; los créditos están
+  en `media/stock/CREDITS.md`.
 
 ### Añadir un episodio nuevo
 
@@ -142,7 +145,8 @@ src/lib/render.mjs     plantilla base, cabecera, pie, esquemas
 src/pages/             una función por tipo de página
 src/assets/            CSS y JS del sitio
 functions/             backend de Cloudflare Pages
-media/raw, media/yt    fotografía original y miniaturas del canal
+media/raw, media/yt    fotografía propia y miniaturas del canal
+media/stock            fotos de Unsplash para el blog, con CREDITS.md
 public/                se copia tal cual a dist/ (_headers, _redirects, IndexNow)
 legacy/                el HTML de una sola página del que partió todo
 ```
