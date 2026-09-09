@@ -1,0 +1,16 @@
+{
+  "name": "otraconversacion",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Sitio web oficial del podcast Otra Conversacion",
+  "scripts": {
+    "images": "node tools/images.mjs",
+    "build": "node build.mjs",
+    "dev": "node build.mjs && npx wrangler pages dev dist --port 8788",
+    "deploy": "node build.mjs && npx wrangler pages deploy dist --project-name otraconversacion"
+  },
+  "devDependencies": {
+    "sharp": "^0.33.5"
+  }
+}

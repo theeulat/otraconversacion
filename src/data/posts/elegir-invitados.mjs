@@ -1,0 +1,72 @@
+export default {
+  id: 'elegir-invitados',
+  slug: { es: 'como-elegimos-a-los-invitados', en: 'how-we-choose-our-guests' },
+  date: '2026-04-18', updated: '2026-09-09',
+  tag: { es: 'Guía', en: 'Guide' },
+  readMin: 6,
+  image: 'blog-invitados',
+  title: {
+    es: 'Cómo elegimos a los invitados (y cómo proponer uno)',
+    en: 'How we choose our guests (and how to propose one)'
+  },
+  summary: {
+    es: 'Los cinco criterios de la mesa explicados con ejemplos, y la forma concreta de proponernos una historia para que la leamos entera.',
+    en: 'The table’s five criteria explained with examples, and the concrete way to pitch us a story so we read it to the end.'
+  },
+  body: {
+    es: [
+      { p: ['Recibimos propuestas casi todas las semanas y decimos que no a la mayoría. No por nivel: por encaje. Estos son los cinco criterios reales, escritos tal cual los usamos.'] },
+      { h: '1. Dominio comprobable de un mundo concreto',
+        p: ['No buscamos opinadores generalistas. Buscamos a quien puede explicar, con detalle, cómo funciona un mundo por dentro: cómo se negocia un traspaso, cómo se prepara un cuerpo, cómo se lee un currículum en siete segundos.',
+            'El indicador es simple: si tu trabajo tiene procedimientos que casi nadie fuera del gremio conoce, encajas.'] },
+      { h: '2. Una cicatriz de la que se pueda hablar',
+        p: ['Un error propio con nombre, fecha y aprendizaje. No hace falta que sea dramático. Hace falta que sea real y que estés dispuesto a contarlo.',
+            'Las conversaciones donde el invitado solo cuenta aciertos son las que peor envejecen y las que menos gente termina.'] },
+      { h: '3. Que la historia no esté ya contada',
+        p: ['Si has hecho diez podcasts este año respondiendo a las mismas preguntas, el episodio va a sonar a repetición y lo sabemos los dos.',
+            'Esto no descarta a nadie: solo cambia el ángulo. Con invitados muy entrevistados buscamos la parte de su oficio que nunca les preguntan.'] },
+      { h: '4. Disposición a hablar sin guion',
+        p: ['Aquí no se mandan las preguntas por adelantado. Se habla quince minutos antes para conocernos y a partir de ahí la conversación va donde tenga que ir.',
+            'Si necesitas un cuestionario cerrado y aprobación previa de temas, esta mesa no es el sitio y te lo diremos con respeto.'] },
+      { h: '5. Que no vengas a vender',
+        p: ['Puedes hablar de tu empresa todo lo que quieras: es tu historia. Lo que no hacemos es convertir un episodio en un anuncio.',
+            'La regla práctica: si tu objetivo es que la gente entienda tu oficio, encajas. Si tu objetivo es que compren esta semana, hay formatos mejores y los tenemos.'] },
+      { h: 'Lo que no puntúa',
+        p: ['No puntúan los seguidores. No puntúa el cargo. No puntúa haber salido en televisión. Y no se paga por sentarse: no cobramos a los invitados ni aceptamos pagos por entrevistas.',
+            'Un autónomo con doce años de oficio tiene más posibilidades que un directivo con un discurso corporativo.'] },
+      { h: 'Cómo proponernos una historia',
+        p: ['El formulario de la web es la vía rápida, pero lo que de verdad marca la diferencia es el contenido. Tres líneas bien escritas pesan más que un dosier:'],
+        ul: ['Qué has construido o sostenido, con una cifra: años, personas, clientes.',
+             'Qué sabe usted que casi nadie sabe de su oficio.',
+             'Un error propio del que esté dispuesto a hablar.'] },
+      { p: ['Con eso basta. Respondemos a todas las propuestas, también a las que no encajan, y en menos de 48 horas.'] }
+    ],
+    en: [
+      { p: ['We get pitches most weeks and say no to most of them. Not on quality: on fit. These are the five real criteria, written exactly as we use them.'] },
+      { h: '1. Verifiable command of a specific world',
+        p: ['We are not looking for generalist commentators. We look for people who can explain, in detail, how a world works from the inside: how a transfer is negotiated, how a body is prepared, how a CV is read in seven seconds.',
+            'The test is simple: if your job has procedures almost nobody outside the trade knows, you fit.'] },
+      { h: '2. A scar you can talk about',
+        p: ['A mistake of your own with a name, a date and a lesson. It does not need to be dramatic. It needs to be real and you need to be willing to tell it.',
+            'Conversations where the guest only recounts wins age worst and get finished least.'] },
+      { h: '3. A story that has not already been told',
+        p: ['If you have done ten podcasts this year answering the same questions, the episode will sound like a repeat and we both know it.',
+            'This rules nobody out: it changes the angle. With heavily interviewed guests we look for the part of their trade nobody ever asks about.'] },
+      { h: '4. Willingness to talk without a script',
+        p: ['We do not send questions in advance. We talk for fifteen minutes beforehand to get to know each other and from there the conversation goes where it needs to go.',
+            'If you need a closed questionnaire and topic approval, this table is not the place and we will say so with respect.'] },
+      { h: '5. You are not here to sell',
+        p: ['You can talk about your company as much as you like: it is your story. What we do not do is turn an episode into an advert.',
+            'The practical rule: if your aim is for people to understand your trade, you fit. If your aim is for them to buy this week, there are better formats and we have them.'] },
+      { h: 'What does not count',
+        p: ['Followers do not count. Job title does not count. Having been on television does not count. And nobody pays for a seat: we do not charge guests and we do not accept payment for interviews.',
+            'A sole trader with twelve years in the trade has better odds than an executive with a corporate script.'] },
+      { h: 'How to pitch us',
+        p: ['The form on the site is the fast route, but what really makes the difference is the content. Three well-written lines beat a full deck:'],
+        ul: ['What you have built or sustained, with one number: years, people, customers.',
+             'What you know that almost nobody outside your trade knows.',
+             'One mistake of your own you are willing to discuss.'] },
+      { p: ['That is enough. We answer every pitch, including the ones that do not fit, within 48 hours.'] }
+    ]
+  }
+};

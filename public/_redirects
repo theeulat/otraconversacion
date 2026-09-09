@@ -1,0 +1,14 @@
+# Rutas antiguas del prototipo de una sola pagina
+/index.html                /                       301
+/episodios                 /episodios/             301
+/glosario                  /glosario/              301
+/publicita                 /publicita/             301
+/se-invitado               /se-invitado/           301
+/blog                      /blog/                  301
+/contacto                  /contacto/              301
+/sobre                     /sobre/                 301
+/feed/podcast.rss          /feed/podcast.xml       301
+/en/episodes               /en/episodes/           301
+/en/glossary               /en/glossary/           301
+/en/advertise              /en/advertise/          301
+/en/be-a-guest             /en/be-a-guest/         301

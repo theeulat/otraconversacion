@@ -1,0 +1,14 @@
+name = "otraconversacion"
+compatibility_date = "2026-09-01"
+pages_build_output_dir = "dist"
+
+# Base de datos de los mensajes del formulario
+[[d1_databases]]
+binding = "DB"
+database_name = "otraconversacion"
+database_id = "a17a2d5f-1357-450d-8798-1a2b09bfbe2a"
+
+# Limite de ritmo por IP en /api/contact
+[[kv_namespaces]]
+binding = "RATE_LIMIT"
+id = "a741895252b6423bad1de34990bb7d00"

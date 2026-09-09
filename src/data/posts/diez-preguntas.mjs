@@ -1,0 +1,72 @@
+export default {
+  id: 'diez-preguntas',
+  slug: { es: 'las-10-preguntas-de-cada-episodio', en: 'the-10-questions-we-ask-in-every-episode' },
+  date: '2026-05-28', updated: '2026-09-09',
+  tag: { es: 'Método', en: 'Method' },
+  readMin: 8,
+  image: 'blog-preguntas',
+  title: {
+    es: 'Las 10 preguntas que abren a cualquiera que ha construido algo',
+    en: 'The 10 questions that open up anyone who has built something'
+  },
+  summary: {
+    es: 'No hay guion, pero sí hay método. Estas son las preguntas que usamos para que una conversación de una hora no se quede en la superficie.',
+    en: 'There is no script, but there is a method. These are the questions we use to stop an hour-long conversation from staying on the surface.'
+  },
+  body: {
+    es: [
+      { p: ['En esta mesa no hay guion. Sí hay método. Estas diez preguntas no se hacen todas ni en este orden, pero están siempre en la cabeza del que pregunta, porque son las que rompen la capa de entrevista y llevan a la conversación de verdad.',
+            'Sirven para un podcast y sirven para cualquier reunión en la que quieras entender a alguien de verdad.'] },
+      { h: '1. ¿Cómo era tu vida el año antes de empezar esto?',
+        p: ['Casi nadie empieza algo desde la comodidad. Esta pregunta sitúa el punto de partida real y evita la versión de LinkedIn, en la que todo empezó con una visión clara.'] },
+      { h: '2. ¿Cuál fue la primera vez que alguien te pagó por esto?',
+        p: ['El primer cobro es un recuerdo nítido para todo el mundo. Cambia el registro de la conversación de abstracto a concreto en una sola respuesta.'] },
+      { h: '3. ¿Qué es lo que la gente cree de tu oficio y es mentira?',
+        p: ['La mejor pregunta del repertorio. Todos los profesionales tienen un mito que les molesta, y desmontarlo les enciende. Además es lo que el oyente quiere saber.'] },
+      { h: '4. ¿Cuál fue el peor mes?',
+        p: ['No «el peor momento», que se responde con un lugar común. Un mes es una unidad concreta: se puede fechar, se puede narrar y no se puede esquivar con una frase bonita.'] },
+      { h: '5. ¿Qué hiciste ese mes, exactamente?',
+        p: ['Es la pregunta que hay detrás de la pregunta. La primera da el titular; esta da el aprendizaje. Aquí es donde salen las decisiones reales.'] },
+      { h: '6. ¿Qué harías distinto si empezaras hoy?',
+        p: ['Convierte la experiencia en algo utilizable por quien escucha. Y suele destapar el error que el invitado todavía está digiriendo.'] },
+      { h: '7. ¿Qué parte de tu trabajo no le gusta a nadie y a ti sí?',
+        p: ['Revela vocación de verdad. Quien lleva quince años en un oficio siempre tiene una tarea rara que le gusta y que explica por qué sigue ahí.'] },
+      { h: '8. ¿A quién le debes algo que no le has dicho?',
+        p: ['Baja el ritmo de la conversación de golpe. Es la pregunta que más veces ha cambiado el tono de un episodio, y casi siempre para mejor.'] },
+      { h: '9. ¿Qué te preguntan siempre y ya no soportas responder?',
+        p: ['Además de ser divertida, funciona como filtro: te dice qué preguntas evitar y qué territorios están agotados. A menudo el invitado responde y, sin querer, da la mejor versión de esa respuesta.'] },
+      { h: '10. Si alguien está empezando en tu sector, ¿qué le dirías que nadie le dice?',
+        p: ['El cierre natural. Deja al oyente con algo en la mano y suele ser el fragmento que más se comparte del episodio.'] },
+      { h: 'La regla que sostiene las diez',
+        p: ['Después de cada respuesta, esperar dos segundos antes de hablar. La mitad de lo mejor de esta mesa ha salido en esos dos segundos, cuando el invitado decide añadir una frase más que no tenía prevista.',
+            'Ese silencio incómodo es la técnica más barata y más eficaz que existe, y es la que casi ninguna entrevista respeta.'] }
+    ],
+    en: [
+      { p: ['There is no script at this table. There is a method. These ten questions are not all asked, and never in this order, but they are always in the interviewer’s head, because they are the ones that break the interview layer and get to the real conversation.',
+            'They work for a podcast and they work for any meeting where you actually want to understand someone.'] },
+      { h: '1. What was your life like the year before you started this?',
+        p: ['Almost nobody starts something from a comfortable place. This locates the real starting point and avoids the LinkedIn version where it all began with a clear vision.'] },
+      { h: '2. When was the first time somebody paid you for this?',
+        p: ['Everyone remembers their first payment sharply. It moves the conversation from abstract to concrete in a single answer.'] },
+      { h: '3. What do people believe about your trade that is simply false?',
+        p: ['The best question in the set. Every professional has a myth that irritates them, and dismantling it lights them up. It is also exactly what the listener wants to know.'] },
+      { h: '4. What was the worst month?',
+        p: ['Not "the worst moment", which gets answered with a platitude. A month is a concrete unit: you can date it, you can narrate it, and you cannot dodge it with a nice line.'] },
+      { h: '5. What did you do that month, specifically?',
+        p: ['This is the question behind the question. The first one gives the headline; this one gives the lesson. Real decisions come out here.'] },
+      { h: '6. What would you do differently if you started today?',
+        p: ['It turns experience into something the listener can use. It also tends to uncover the mistake the guest is still digesting.'] },
+      { h: '7. Which part of your job does nobody like except you?',
+        p: ['It reveals genuine vocation. Anyone fifteen years into a trade has one odd task they enjoy, and it explains why they are still there.'] },
+      { h: '8. Who do you owe something you have never said?',
+        p: ['It slows the conversation down instantly. This is the question that has changed the tone of an episode most often, and almost always for the better.'] },
+      { h: '9. What are you always asked that you can no longer stand answering?',
+        p: ['Besides being fun, it works as a filter: it tells you which questions to avoid and which territory is exhausted. Often the guest answers anyway and gives the best version of that answer without meaning to.'] },
+      { h: '10. If someone is starting out in your field, what would you tell them that nobody says?',
+        p: ['The natural close. It leaves the listener holding something, and it is usually the most shared clip of the episode.'] },
+      { h: 'The rule that holds the ten together',
+        p: ['After every answer, wait two seconds before speaking. Half of the best material at this table has come out in those two seconds, when the guest decides to add one more sentence they had not planned.',
+            'That uncomfortable silence is the cheapest and most effective technique there is, and almost no interview respects it.'] }
+    ]
+  }
+};
