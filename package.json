@@ -11,6 +11,7 @@
     "deploy": "node build.mjs && npx wrangler pages deploy dist --project-name otraconversacion"
   },
   "devDependencies": {
+    "esbuild": "^0.28.2",
     "sharp": "^0.33.5"
   }
 }

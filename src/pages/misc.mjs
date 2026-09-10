@@ -366,7 +366,8 @@ export function notFoundPage({ lang, episodes }) {
     url,
     html: layout({
       lang, url: ROUTES.home[lang], altUrl: ROUTES.home[lang === 'es' ? 'en' : 'es'],
-      title, description: t(lang, 'Página no encontrada.', 'Page not found.'), body, robots: 'noindex, follow'
+      title, description: t(lang, 'Página no encontrada.', 'Page not found.'), body,
+      robots: 'noindex, follow', canonical: false
     })
   };
 }

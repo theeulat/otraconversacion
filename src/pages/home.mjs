@@ -1,5 +1,5 @@
 import { SITE, ROUTES, t } from '../data/site.mjs';
-import { layout, esc, picture, breadcrumb, fmtDuration } from '../lib/render.mjs';
+import { layout, esc, picture, breadcrumb, fmtDuration, preloadImage } from '../lib/render.mjs';
 import { epCard, epUrl } from './episodes.mjs';
 import { postCard } from './blog.mjs';
 
@@ -179,5 +179,15 @@ export function homePage({ lang, episodes, posts }) {
     }
   ];
 
-  return { url, html: layout({ lang, url, altUrl, title, description, body, active: '', graph }) };
+  const preload = preloadImage({
+    name: 'host', widths: [320, 480, 640], sizes: '(max-width:920px) 60vw, 290px'
+  });
+
+  return {
+    url,
+    html: layout({
+      lang, url, altUrl, title, description, body, active: '', graph, preload,
+      ogImageAlt: t(lang, 'Jesús Martínez en la mesa de Otra Conversación', 'Jesús Martínez at the Otra Conversación table')
+    })
+  };
 }

@@ -1,5 +1,5 @@
 import { SITE, ROUTES, POST_BASE, t } from '../data/site.mjs';
-import { layout, esc, picture, crumbsHtml, breadcrumb, fmtDate } from '../lib/render.mjs';
+import { layout, esc, picture, crumbsHtml, breadcrumb, fmtDate, preloadImage } from '../lib/render.mjs';
 
 export const postUrl = (p, lang) => POST_BASE[lang] + p.slug[lang] + '/';
 
@@ -163,7 +163,10 @@ export function postPage({ lang, post, posts }) {
     url,
     html: layout({
       lang, url, altUrl, title, description, body, active: 'blog',
-      ogType: 'article', ogImage: `/img/og-${post.image}.jpg`, graph
+      ogType: 'article', ogImage: `/img/og-${post.image}.jpg`, graph,
+      ogImageAlt: post.imageAlt ? post.imageAlt[lang] : '',
+      published: post.date, modified: post.updated || post.date,
+      preload: preloadImage({ name: post.image, sizes: '(max-width:900px) 94vw, 860px' })
     })
   };
 }

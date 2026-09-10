@@ -27,7 +27,7 @@
 .crumbs{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--humo);display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .crumbs a{color:var(--humo);border-bottom:1px solid transparent}
 .crumbs a:hover{color:var(--hueso);border-color:var(--line)}
-.crumbs .sep{color:var(--rojo)}
+.crumbs .sep{color:var(--rojo-txt)}
 
 /* filtros de episodio */
 .filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:calc(var(--lh)*1.5)}
@@ -82,7 +82,7 @@
 .article li::before{content:"";position:absolute;left:0;top:22px;width:12px;height:2px;background:var(--rojo)}
 .article a:not(.btn){color:var(--hueso);border-bottom:1px solid var(--rojo)}
 .artmeta{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--humo);display:flex;gap:16px;flex-wrap:wrap;margin-top:16px}
-.artmeta .rd{color:var(--rojo)}
+.artmeta .rd{color:var(--rojo-txt)}
 
 /* formularios reales */
 .form{display:grid;gap:18px;background:var(--negro);border:1px solid var(--line);border-radius:12px;padding:clamp(20px,2.6vw,34px)}
@@ -137,3 +137,17 @@ img.fill{background:var(--carbon)}
 img{height:auto}
 .ph picture img,.video picture img,.ytwrap picture img{height:100%}
 .video .play,.video .info,.video .phlab,.video .num{z-index:2}
+
+/* ── buscador ── */
+.searchbox{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:calc(var(--lh)*1.2)}
+.searchbox input{flex:1 1 280px;background:var(--carbon);border:1px solid var(--line);border-radius:100px;color:var(--hueso);font-family:var(--text);font-size:16px;padding:16px 24px;transition:border-color .25s}
+.searchbox input::placeholder{color:var(--humo)}
+.searchbox input:focus{outline:none;border-color:var(--hueso)}
+.searchbox input::-webkit-search-cancel-button{filter:invert(1);opacity:.5}
+.results{display:grid;gap:10px;margin-top:var(--lh)}
+.results .result{border:1px solid var(--line);border-radius:12px;background:var(--carbon);padding:18px 22px;display:grid;gap:7px;transition:border-color .2s,transform .2s var(--ease)}
+.results .result:hover{border-color:var(--humo);transform:translateY(-2px)}
+.results .result .k{font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--rojo-txt)}
+.results .result .tt{font-family:var(--display);font-size:17px;line-height:1.18}
+.results .result .d{font-size:14px;line-height:21px;color:var(--ceniza)}
+#resultado-cuenta:empty{display:none}

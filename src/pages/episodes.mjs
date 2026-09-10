@@ -1,6 +1,6 @@
 import { SITE, ROUTES, EPISODE_BASE, t } from '../data/site.mjs';
 import {
-  layout, esc, picture, crumbsHtml, breadcrumb, fmtDate, fmtDuration, isoDuration, lcFirst
+  layout, esc, picture, crumbsHtml, breadcrumb, fmtDate, fmtDuration, isoDuration, lcFirst, preloadImage
 } from '../lib/render.mjs';
 
 export const epUrl = (ep, lang) => EPISODE_BASE[lang] + ep.slug[lang] + '/';
@@ -246,7 +246,10 @@ export function episodePage({ lang, ep, prev, next, related, episodes }) {
     url,
     html: layout({
       lang, url, altUrl, title, description, body, active: 'episodes',
-      ogType: 'video.episode', ogImage: `/img/og-ep-${ep.n}.jpg`, graph
+      ogType: 'video.episode', ogImage: `/img/og-ep-${ep.n}.jpg`, graph,
+      ogImageAlt: t(lang, `Portada del episodio ${ep.n} con ${ep.guest.name}`, `Cover of episode ${ep.n} with ${ep.guest.name}`),
+      published: ep.pub,
+      preload: preloadImage({ name: `ep-${ep.n}`, sizes: '(max-width:980px) 94vw, 60vw' })
     })
   };
 }

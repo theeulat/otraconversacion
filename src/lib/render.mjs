@@ -44,6 +44,15 @@ export function picture({ name, alt, widths, sizes, ratio = '16/9', cls = '', lo
     `${cls ? ` class="${cls}"` : ''}></picture>`;
 }
 
+/* Precarga la imagen que suele ser el elemento mas grande de la pagina.
+   Se declara en AVIF porque es el formato que elegira cualquier navegador actual. */
+export function preloadImage({ name, widths, sizes }) {
+  const w = widths || [480, 768, 1200];
+  const srcset = w.map((x) => `/img/${name}-${x}.avif ${x}w`).join(', ');
+  return `<link rel="preload" as="image" type="image/avif" fetchpriority="high"` +
+    ` imagesrcset="${esc(srcset)}" imagesizes="${esc(sizes || '100vw')}">`;
+}
+
 function navHtml(lang, active, altUrl) {
   const R = (k) => ROUTES[k][lang];
   const item = (key, label) =>
@@ -93,6 +102,7 @@ function footerHtml(lang) {
           <li><a href="${R('glossary')}">${t(lang, 'Glosario', 'Glossary')}</a></li>
           <li><a href="${R('guest')}">${t(lang, 'Sé invitado', 'Be a guest')}</a></li>
           <li><a href="${R('contact')}">${t(lang, 'Contacto', 'Contact')}</a></li>
+          <li><a href="${R('search')}">${t(lang, 'Buscar', 'Search')}</a></li>
         </ul>
       </div>
       <div>
@@ -143,7 +153,7 @@ export function baseGraph(lang) {
       publisher: { '@id': SITE.origin + '/#org' },
       potentialAction: {
         '@type': 'SearchAction',
-        target: { '@type': 'EntryPoint', urlTemplate: SITE.origin + ROUTES.episodes[lang] + '?q={search_term_string}' },
+        target: { '@type': 'EntryPoint', urlTemplate: SITE.origin + ROUTES.search[lang] + '?q={search_term_string}' },
         'query-input': 'required name=search_term_string'
       }
     },
@@ -186,9 +196,9 @@ export function crumbsHtml(items) {
  */
 export function layout({
   lang, url, altUrl, title, description, body, active = '',
-  ogImage = '/img/og-default.jpg', ogType = 'website', graph = [],
+  ogImage = '/img/og-default.jpg', ogImageAlt = '', ogType = 'website', graph = [],
   robots = 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1',
-  bodyClass = ''
+  bodyClass = '', canonical = true, preload = '', published = '', modified = ''
 }) {
   const esUrl = lang === 'es' ? url : altUrl;
   const enUrl = lang === 'en' ? url : altUrl;
@@ -201,7 +211,7 @@ export function layout({
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(title)}</title>
 <meta name="description" content="${esc(description)}">
-<link rel="canonical" href="${abs(url)}">
+${canonical ? `<link rel="canonical" href="${abs(url)}">` : ''}
 <meta name="robots" content="${robots}">
 <meta name="theme-color" content="#0C0B09">
 <meta name="author" content="${esc(SITE.host.name)}">
@@ -221,18 +231,21 @@ export function layout({
 <meta property="og:image" content="${abs(ogImage)}">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
+${ogImageAlt ? `<meta property="og:image:alt" content="${esc(ogImageAlt)}">` : ''}
+${published ? `<meta property="article:published_time" content="${published}">` : ''}
+${modified ? `<meta property="article:modified_time" content="${modified}">` : ''}
 <meta property="og:locale" content="${lang === 'en' ? 'en_GB' : 'es_ES'}">
 <meta property="og:locale:alternate" content="${lang === 'en' ? 'es_ES' : 'en_GB'}">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="${esc(title)}">
 <meta name="twitter:description" content="${esc(description)}">
 <meta name="twitter:image" content="${abs(ogImage)}">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:ital,wght@0,400;0,500;0,600;0,700;0,800;1,800&family=JetBrains+Mono:wght@400;500;700&display=swap">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:ital,wght@0,400;0,500;0,600;0,700;0,800;1,800&family=JetBrains+Mono:wght@400;500;700&display=swap" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:ital,wght@0,400;0,500;0,600;0,700;0,800;1,800&family=JetBrains+Mono:wght@400;500;700&display=swap"></noscript>
+<link rel="preload" as="font" type="font/woff2" href="/fonts/archivo-black-400-latin.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="/fonts/archivo-400-latin.woff2" crossorigin>
+${preload}
 <link rel="stylesheet" href="${ASSETS.css}">
 ${jsonld(g)}
+<noscript><style>.rv,.ws .w{opacity:1!important;transform:none!important}.und::after{transform:scaleX(1)!important}</style></noscript>
 </head>
 <body${bodyClass ? ` class="${bodyClass}"` : ''}>
 <a class="skip" href="#main">${t(lang, 'Saltar al contenido', 'Skip to content')}</a>

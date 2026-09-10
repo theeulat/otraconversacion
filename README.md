@@ -25,8 +25,10 @@ alojado en Cloudflare Pages con funciones para el formulario de contacto.
 | Sobre el podcast | `/sobre/` | `/en/about/` |
 | Contacto | `/contacto/` | `/en/contact/` |
 | Legales | `/legal/…` | `/en/legal/…` |
+| Buscador | `/buscar/` | `/en/search/` |
 
-Además: `sitemap.xml`, `robots.txt`, `feed/podcast.xml`, `feed/blog.xml`, `site.webmanifest`.
+Además: `sitemap.xml`, `robots.txt`, `feed/podcast.xml`, `feed/blog.xml`, `site.webmanifest`
+y el índice del buscador en `buscar-es.json` y `buscar-en.json`.
 
 ---
 
@@ -63,6 +65,8 @@ Todo el texto vive en `src/data/`. No hay que tocar HTML.
 - **`youtube.json`** — datos técnicos sacados del canal: id de vídeo, fecha, duración,
   visitas y los párrafos reales de la descripción de YouTube.
 - **`glossary.mjs`** — términos del glosario.
+- **`site.mjs` → `contentUpdated`** — fecha de revisión de las páginas sin fecha propia
+  (glosario, legales, ventas). Súbela cuando cambies su texto: alimenta el `lastmod` del sitemap.
 - **`posts/*.mjs`** — un archivo por artículo del blog; `posts.mjs` es el índice.
   Cada uno apunta a su foto de cabecera, que vive en `media/stock/`. Para cambiarla basta
   con sustituir el archivo con el mismo nombre y volver a desplegar; los créditos están
@@ -137,11 +141,29 @@ A partir de ese momento cada envío llega a jesus@otraconversacion.com con el re
 - `hreflang` recíproco entre español e inglés en cada página y en el sitemap.
 - Datos estructurados por página: `PodcastSeries`, `PodcastEpisode` con `VideoObject`,
   `BlogPosting`, `FAQPage`, `DefinedTermSet`, `BreadcrumbList`, `Organization` y `Person`.
-- Imágenes en AVIF, WebP y JPEG con tres anchos y `sizes` por contexto.
+- Imágenes en AVIF, WebP y JPEG con tres anchos y `sizes` por contexto, con precarga de la
+  imagen principal de cada página.
+- `lastmod` del sitemap con la fecha real de cada contenido, no la de la compilación.
 - YouTube no carga nada hasta que se pulsa reproducir: sin cookies de terceros al entrar.
+- Ninguna petición a terceros al cargar. Las tipografías se sirven desde el propio dominio,
+  así que no hay llamada a Google Fonts.
 - Google Search Console: propiedad `https://otraconversacion.com/` verificada por archivo HTML,
   sitemap enviado y aceptado.
 - IndexNow configurado con la clave `afac5a7c024db5190c6f7bf6f91b261e`.
+
+---
+
+## Rendimiento y seguridad
+
+- CSS y JavaScript se minifican con esbuild en cada compilación y se sirven con huella de
+  contenido en la URL, así que una versión nueva nunca queda atrapada en la caché.
+- Tipografías propias en WOFF2, con `font-display: swap` y caché de un año.
+- Cabecera `Content-Security-Policy` estricta: sólo se permite ejecutar JavaScript del propio
+  dominio y los únicos marcos admitidos son los de YouTube.
+- Sin JavaScript la web se lee entera: las animaciones de aparición se desactivan solas.
+
+Si añades scripts o recursos de terceros habrá que abrir la política en `public/_headers`.
+Los estilos en línea sí están permitidos, que es lo que usan las plantillas.
 
 ---
 
@@ -154,7 +176,7 @@ tools/indexnow.mjs     aviso a buscadores
 src/data/              todo el contenido
 src/lib/render.mjs     plantilla base, cabecera, pie, esquemas
 src/pages/             una función por tipo de página
-src/assets/            CSS y JS del sitio
+src/assets/            CSS, JS y tipografías del sitio
 functions/             backend de Cloudflare Pages
 .github/workflows/     despliegue automatico al hacer push a main
 media/raw, media/yt    fotografía propia y miniaturas del canal

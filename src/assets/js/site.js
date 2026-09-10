@@ -142,6 +142,87 @@
     if (btn) btn.addEventListener('click', load);
   });
 
+
+  /* ── buscador ─────────────────────────────────────── */
+  (function () {
+    var input = document.getElementById('q');
+    var out = document.getElementById('resultados');
+    var count = document.getElementById('resultado-cuenta');
+    var form = document.getElementById('buscador');
+    if (!input || !out) return;
+
+    var en = document.documentElement.lang === 'en';
+    var index = null;
+
+    /* Sin acentos y en minusculas: buscar "psiquiatria" debe encontrar "psiquiatría". */
+    var plain = function (s) {
+      return String(s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    };
+
+    var render = function (query) {
+      var q = plain(query).trim();
+      out.textContent = '';
+      if (!q) { count.textContent = ''; return; }
+      if (!index) { count.textContent = en ? 'Loading…' : 'Cargando…'; return; }
+
+      var words = q.split(/\s+/).filter(Boolean);
+      var hits = [];
+      index.forEach(function (e) {
+        var title = plain(e.t), rest = plain(e.d + ' ' + e.k + ' ' + (e.x || ''));
+        var score = 0, all = true;
+        words.forEach(function (w) {
+          var inTitle = title.indexOf(w) !== -1;
+          var inRest = rest.indexOf(w) !== -1;
+          if (!inTitle && !inRest) { all = false; return; }
+          score += inTitle ? 3 : 1;
+          if (inTitle && title.indexOf(w) === 0) score += 2;
+        });
+        if (all) hits.push({ e: e, score: score });
+      });
+      hits.sort(function (a, b) { return b.score - a.score; });
+
+      count.textContent = hits.length
+        ? (en ? hits.length + ' result' + (hits.length === 1 ? '' : 's') : hits.length + ' resultado' + (hits.length === 1 ? '' : 's'))
+        : (en ? 'Nothing found. Try another word.' : 'Sin resultados. Prueba con otra palabra.');
+
+      hits.slice(0, 40).forEach(function (h) {
+        var a = document.createElement('a');
+        a.className = 'result';
+        a.href = h.e.u;
+        var k = document.createElement('span');
+        k.className = 'k';
+        k.textContent = h.e.k;
+        var tt = document.createElement('span');
+        tt.className = 'tt';
+        tt.textContent = h.e.t;
+        a.appendChild(k);
+        a.appendChild(tt);
+        if (h.e.d) {
+          var d = document.createElement('span');
+          d.className = 'd';
+          d.textContent = h.e.d;
+          a.appendChild(d);
+        }
+        out.appendChild(a);
+      });
+    };
+
+    var debounce = null;
+    input.addEventListener('input', function () {
+      clearTimeout(debounce);
+      debounce = setTimeout(function () { render(input.value); }, 120);
+    });
+    if (form) form.addEventListener('submit', function (e) { e.preventDefault(); render(input.value); });
+
+    fetch(input.getAttribute('data-index'))
+      .then(function (r) { return r.json(); })
+      .then(function (data) { index = data; render(input.value); })
+      .catch(function () { count.textContent = en ? 'The index could not be loaded.' : 'No se ha podido cargar el índice.'; });
+
+    var q = new URLSearchParams(location.search).get('q');
+    if (q) { input.value = q; }
+  })();
+
   /* ── formularios ──────────────────────────────────── */
   document.querySelectorAll('form[data-api]').forEach(function (form) {
     var status = form.querySelector('.formstatus');

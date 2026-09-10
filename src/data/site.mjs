@@ -28,6 +28,9 @@ export const SITE = {
     views: 59661,
     hours: 27
   },
+  // Ultima revision de las paginas sin fecha propia (glosario, legales, ventas).
+  // Subela cuando cambies su texto: alimenta el lastmod del sitemap.
+  contentUpdated: '2026-09-09',
   // Idiomas: español es la versión canónica en la raíz; inglés cuelga de /en/
   langs: ['es', 'en'],
   defaultLang: 'es'
@@ -46,7 +49,8 @@ export const ROUTES = {
   privacy:   { es: '/legal/privacidad/', en: '/en/legal/privacy/' },
   cookies:   { es: '/legal/cookies/',  en: '/en/legal/cookies/' },
   terms:     { es: '/legal/aviso-legal/', en: '/en/legal/terms/' },
-  thanks:    { es: '/gracias/',        en: '/en/thanks/' }
+  thanks:    { es: '/gracias/',        en: '/en/thanks/' },
+  search:    { es: '/buscar/',         en: '/en/search/' }
 };
 
 export const EPISODE_BASE = { es: '/episodios/', en: '/en/episodes/' };

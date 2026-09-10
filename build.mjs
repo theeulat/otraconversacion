@@ -16,12 +16,15 @@ import { homePage } from './src/pages/home.mjs';
 import { episodesIndex, episodePage, epUrl } from './src/pages/episodes.mjs';
 import { blogIndex, postPage, postUrl } from './src/pages/blog.mjs';
 import { glossaryPage, aboutPage, contactPage, legalPage, thanksPage, notFoundPage } from './src/pages/misc.mjs';
+import { searchPage, searchIndex } from './src/pages/search.mjs';
 import { advertisePage, guestPage } from './src/pages/sales.mjs';
 import buildImages from './tools/images.mjs';
+import { transform } from 'esbuild';
 
 const ROOT = path.dirname(fileURLToPath(import.meta.url));
 const DIST = path.join(ROOT, 'dist');
 const LANGS = ['es', 'en'];
+const REVISADO = SITE.contentUpdated;
 
 /* ── datos ─────────────────────────────────────────── */
 const YT = JSON.parse(await readFile(path.join(ROOT, 'src/data/youtube.json'), 'utf8'));
@@ -33,13 +36,13 @@ const EPISODES = EPISODES_RAW.map((e) => {
 
 /* ── utilidades de escritura ───────────────────────── */
 const written = [];
-async function emit(urlPath, html, { sitemap = true, changefreq = 'monthly', priority = 0.6, lang = 'es', alt = null } = {}) {
+async function emit(urlPath, html, { sitemap = true, changefreq = 'monthly', priority = 0.6, lang = 'es', alt = null, lastmod = null } = {}) {
   const file = urlPath.endsWith('.html')
     ? path.join(DIST, urlPath)
     : path.join(DIST, urlPath, 'index.html');
   await mkdir(path.dirname(file), { recursive: true });
   await writeFile(file, html, 'utf8');
-  if (sitemap) written.push({ url: urlPath, changefreq, priority, lang, alt });
+  if (sitemap) written.push({ url: urlPath, changefreq, priority, lang, alt, lastmod });
 }
 
 /* ── construccion ──────────────────────────────────── */
@@ -53,12 +56,26 @@ await buildImages(EPISODES);
 console.log('· copiando estaticos');
 await mkdir(path.join(DIST, 'css'), { recursive: true });
 await mkdir(path.join(DIST, 'js'), { recursive: true });
-const css = (await readFile(path.join(ROOT, 'src/assets/css/site.css'), 'utf8'))
-  + '\n' + (await readFile(path.join(ROOT, 'src/assets/css/extra.css'), 'utf8'));
-const js = await readFile(path.join(ROOT, 'src/assets/js/site.js'), 'utf8');
+/* Las tipografias van primero: definen las familias que usa el resto de la hoja. */
+const cssFuente = [
+  await readFile(path.join(ROOT, 'src/assets/fonts/fonts.css'), 'utf8'),
+  await readFile(path.join(ROOT, 'src/assets/css/site.css'), 'utf8'),
+  await readFile(path.join(ROOT, 'src/assets/css/extra.css'), 'utf8')
+].join(' ');
+const jsFuente = await readFile(path.join(ROOT, 'src/assets/js/site.js'), 'utf8');
+
+const css = (await transform(cssFuente, { loader: 'css', minify: true })).code;
+const js = (await transform(jsFuente, { loader: 'js', minify: true, target: 'es2018' })).code;
+console.log(`  CSS ${(cssFuente.length / 1024).toFixed(1)} KB -> ${(css.length / 1024).toFixed(1)} KB`);
+console.log(`  JS  ${(jsFuente.length / 1024).toFixed(1)} KB -> ${(js.length / 1024).toFixed(1)} KB`);
+
 const stamp = (text) => createHash('sha1').update(text).digest('hex').slice(0, 8);
 await writeFile(path.join(DIST, 'css/site.css'), css, 'utf8');
 await writeFile(path.join(DIST, 'js/site.js'), js, 'utf8');
+await cp(path.join(ROOT, 'src/assets/fonts'), path.join(DIST, 'fonts'), {
+  recursive: true,
+  filter: (src) => !src.endsWith('.css')
+});
 ASSETS.css = `/css/site.css?v=${stamp(css)}`;
 ASSETS.js = `/js/site.js?v=${stamp(js)}`;
 if (existsSync(path.join(ROOT, 'public'))) await cp(path.join(ROOT, 'public'), DIST, { recursive: true });
@@ -66,15 +83,16 @@ if (existsSync(path.join(ROOT, 'public'))) await cp(path.join(ROOT, 'public'), D
 console.log('· generando paginas');
 for (const lang of LANGS) {
   const home = homePage({ lang, episodes: EPISODES, posts: POSTS });
-  await emit(home.url, home.html, { changefreq: 'weekly', priority: 1.0, lang, alt: ROUTES.home[lang === 'es' ? 'en' : 'es'] });
+  await emit(home.url, home.html, { changefreq: 'weekly', priority: 1.0, lang, alt: ROUTES.home[lang === 'es' ? 'en' : 'es'], lastmod: EPISODES[0].pub });
 
   const idx = episodesIndex({ lang, episodes: EPISODES });
-  await emit(idx.url, idx.html, { changefreq: 'weekly', priority: 0.9, lang, alt: ROUTES.episodes[lang === 'es' ? 'en' : 'es'] });
+  await emit(idx.url, idx.html, { changefreq: 'weekly', priority: 0.9, lang, alt: ROUTES.episodes[lang === 'es' ? 'en' : 'es'], lastmod: EPISODES[0].pub });
 
   for (const season of [1, 2]) {
     const s = episodesIndex({ lang, episodes: EPISODES, season });
     const altBase = lang === 'es' ? ROUTES.episodes.en : ROUTES.episodes.es;
-    await emit(s.url, s.html, { changefreq: 'monthly', priority: 0.7, lang, alt: altBase + `${lang === 'es' ? 'season' : 'temporada'}-${season}/` });
+    const ultimoDeTemporada = EPISODES.find((e) => e.season === season).pub;
+    await emit(s.url, s.html, { changefreq: 'monthly', priority: 0.7, lang, alt: altBase + `${lang === 'es' ? 'season' : 'temporada'}-${season}/`, lastmod: ultimoDeTemporada });
   }
 
   for (let i = 0; i < EPISODES.length; i++) {
@@ -90,32 +108,40 @@ for (const lang of LANGS) {
       related.push(cand);
     }
     const page = episodePage({ lang, ep, prev, next, related, episodes: EPISODES });
-    await emit(page.url, page.html, { changefreq: 'monthly', priority: 0.8, lang, alt: epUrl(ep, lang === 'es' ? 'en' : 'es') });
+    await emit(page.url, page.html, { changefreq: 'monthly', priority: 0.8, lang, alt: epUrl(ep, lang === 'es' ? 'en' : 'es'), lastmod: ep.pub });
   }
 
   const blog = blogIndex({ lang, posts: POSTS });
-  await emit(blog.url, blog.html, { changefreq: 'weekly', priority: 0.8, lang, alt: ROUTES.blog[lang === 'es' ? 'en' : 'es'] });
+  await emit(blog.url, blog.html, { changefreq: 'weekly', priority: 0.8, lang, alt: ROUTES.blog[lang === 'es' ? 'en' : 'es'], lastmod: POSTS[0].updated || POSTS[0].date });
   for (const post of POSTS) {
     const p = postPage({ lang, post, posts: POSTS });
-    await emit(p.url, p.html, { changefreq: 'monthly', priority: 0.7, lang, alt: postUrl(post, lang === 'es' ? 'en' : 'es') });
+    await emit(p.url, p.html, { changefreq: 'monthly', priority: 0.7, lang, alt: postUrl(post, lang === 'es' ? 'en' : 'es'), lastmod: post.updated || post.date });
   }
 
   for (const [fn, key, pr] of [
     [glossaryPage, 'glossary', 0.7], [aboutPage, 'about', 0.6], [contactPage, 'contact', 0.6]
   ]) {
     const p = fn({ lang, terms: GLOSSARY, episodes: EPISODES });
-    await emit(p.url, p.html, { priority: pr, lang, alt: ROUTES[key][lang === 'es' ? 'en' : 'es'] });
+    await emit(p.url, p.html, { priority: pr, lang, alt: ROUTES[key][lang === 'es' ? 'en' : 'es'], lastmod: REVISADO });
   }
 
   const adv = advertisePage({ lang });
-  await emit(adv.url, adv.html, { changefreq: 'monthly', priority: 0.9, lang, alt: ROUTES.advertise[lang === 'es' ? 'en' : 'es'] });
+  await emit(adv.url, adv.html, { changefreq: 'monthly', priority: 0.9, lang, alt: ROUTES.advertise[lang === 'es' ? 'en' : 'es'], lastmod: REVISADO });
   const gst = guestPage({ lang });
-  await emit(gst.url, gst.html, { changefreq: 'monthly', priority: 0.8, lang, alt: ROUTES.guest[lang === 'es' ? 'en' : 'es'] });
+  await emit(gst.url, gst.html, { changefreq: 'monthly', priority: 0.8, lang, alt: ROUTES.guest[lang === 'es' ? 'en' : 'es'], lastmod: REVISADO });
 
   for (const kind of ['privacy', 'cookies', 'terms']) {
     const p = legalPage({ lang, kind });
-    await emit(p.url, p.html, { changefreq: 'yearly', priority: 0.2, lang, alt: ROUTES[kind][lang === 'es' ? 'en' : 'es'] });
+    await emit(p.url, p.html, { changefreq: 'yearly', priority: 0.2, lang, alt: ROUTES[kind][lang === 'es' ? 'en' : 'es'], lastmod: REVISADO });
   }
+
+  const sp = searchPage({ lang });
+  await emit(sp.url, sp.html, { sitemap: false });
+  await writeFile(
+    path.join(DIST, `buscar-${lang}.json`),
+    JSON.stringify(searchIndex({ lang, episodes: EPISODES, posts: POSTS, terms: GLOSSARY })),
+    'utf8'
+  );
 
   const th = thanksPage({ lang });
   await emit(th.url, th.html, { sitemap: false });
@@ -140,7 +166,7 @@ ${written.map((w) => {
     <xhtml:link rel="alternate" hreflang="x-default" href="${SITE.origin}${esc(es)}"/>` : '';
   return `  <url>
     <loc>${SITE.origin}${esc(w.url)}</loc>
-    <lastmod>${today}</lastmod>
+    <lastmod>${w.lastmod || today}</lastmod>
     <changefreq>${w.changefreq}</changefreq>
     <priority>${w.priority.toFixed(1)}</priority>${alts}
   </url>`;
